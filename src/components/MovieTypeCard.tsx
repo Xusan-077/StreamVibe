@@ -1,0 +1,60 @@
+import { icons } from "@/constants/icons";
+import { IMovie } from "@/types";
+import Image from "next/image";
+import Link from "next/link";
+
+interface Props {
+  groupMovies: IMovie[];
+  type: string;
+  isLoading: boolean;
+}
+
+export default function MovieTypeCard({ groupMovies, type, isLoading }: Props) {
+  return (
+    <ul className="">
+      <li className="bg-[#1A1A1A] p-7.5 rounded-lg border border-[#262626]">
+        <div className="grid grid-cols-2 gap-2">
+          {isLoading &&
+            Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={index}
+                className="bg-gray-500 w-29 h-31 rounded-sm"
+              ></div>
+            ))}
+
+          {groupMovies &&
+            groupMovies?.map((movie: IMovie, index) => (
+              <Link href={`/movie/${movie.id}`}>
+                <Image
+                  key={movie.id}
+                  className="w-29 h-31 object-cover rounded-sm"
+                  width={115}
+                  height={125}
+                  src={
+                    movie.poster_path
+                      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                      : `https://placehold.com/600x400/1a1a1a/ffffff.png?text=No+Image`
+                  }
+                  alt={movie.title}
+                  style={{
+                    maskImage:
+                      index > 1
+                        ? "linear-gradient(to bottom, black 0%, transparent 100%)"
+                        : "none",
+                    WebkitMaskImage:
+                      index > 1
+                        ? "linear-gradient(to bottom, black 0%, transparent 100%)"
+                        : "none",
+                  }}
+                />
+              </Link>
+            ))}
+        </div>
+        <div className="flex items-center justify-between">
+          <h3 className="text-[18px] font-semibold text-white">{type}</h3>
+          <Image className="w-5 h-5" src={icons.arrow} alt="arrow icon" />
+        </div>
+      </li>
+    </ul>
+  );
+}
