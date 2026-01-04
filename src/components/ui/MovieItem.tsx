@@ -2,15 +2,17 @@ import { IMovie } from "@/types";
 import Image from "next/image";
 import StarRating from "./StarRating";
 import Link from "next/link";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 interface Props {
   movie: IMovie;
-  inMust?: boolean;
 }
 
-export default function MovieItem({ movie, inMust }: Props) {
+export default function MovieItem({ movie }: Props) {
+  const { width } = useWindowSize();
+
   return (
-    <li className="group bg-[#1A1A1A] p-5 rounded-xl border border-[#262626] transition-all hover:border-[#E50000]/50">
+    <li className="group bg-[#1A1A1A] p-5 max-[640px]:p-4 rounded-xl border border-[#262626] transition-all hover:border-[#E50000]/50">
       <div className="relative overflow-hidden rounded-lg mb-5">
         <Image
           src={
@@ -21,9 +23,7 @@ export default function MovieItem({ movie, inMust }: Props) {
           alt={movie.title}
           width={300}
           height={450}
-          className={`${
-            inMust ? "h-[400px]" : "h-[280px]"
-          } w-full object-cover group-hover:scale-105 transition-transform duration-500`}
+          className={`h-100 w-full max-[640px]:h-65 max-[425px]:h-50 object-cover group-hover:scale-105 transition-transform duration-500`}
         />
 
         <div className="absolute inset-0 bg-gradient-to-t from-[#0F0F0F] via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-4">
@@ -42,9 +42,13 @@ export default function MovieItem({ movie, inMust }: Props) {
         <h4 className="text-white text-[16px] font-semibold line-clamp-1 group-hover:text-[#E50000] transition-colors">
           {movie.title}
         </h4>
-        <div className="flex items-center justify-between">
-          <StarRating voteAverage={movie.vote_average} />
-        </div>
+        {width > 640 ? (
+          <div className="flex items-center justify-between">
+            <StarRating voteAverage={movie.vote_average} />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </li>
   );

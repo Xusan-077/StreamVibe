@@ -8,6 +8,9 @@ import { useState } from "react";
 import MovieTypeCard from "../MovieTypeCard";
 import Subtitle from "./Subtitle";
 import Text from "./Text";
+import { AnimatePresence, motion } from "framer-motion";
+import { useWindowSize } from "@/hooks/useWindowSize";
+import CarouselControler from "./CarouselControler";
 
 interface IMovie_genres {
   id: number;
@@ -30,7 +33,9 @@ export default function MovieGenres({
   title,
   top,
 }: Props) {
+  const { width } = useWindowSize();
   const [page, setPage] = useState<number>(1);
+  const totalPage = width > 768 ? 5 : 2;
 
   const MOVIE_GENRES: IMovie_genres[] = [
     { id: 28, name: "Action", slug: "action" },
@@ -77,14 +82,15 @@ export default function MovieGenres({
 
   const isAllLoading = results.some((result) => result.isLoading);
 
-  const start = (page - 1) * 5;
-  const end = start + 5;
+  const start = (page - 1) * totalPage;
+  const end = start + totalPage;
 
   const pagination = movieActions.slice(start, end);
+  const maxPages = Math.ceil(movieActions.length / totalPage);
 
   return (
-    <div className={`${inMovie ? "" : "mb-37.5"}`}>
-      <div className="mb-20 flex items-end justify-between">
+    <div className={`${inMovie ? "" : "mb-37.5 max-[640px]:mb-25"}`}>
+      <div className=" mb-20 items-center max-[640px]:mb-10 gap-20 flex justify-between">
         {inMovie ? (
           <Subtitle text={title} />
         ) : (
@@ -94,59 +100,51 @@ export default function MovieGenres({
           </div>
         )}
 
-        <div className="bg-[#0F0F0F] flex items-center gap-4 p-4 rounded-lg">
-          <button
-            onClick={() => setPage((p) => p - 1)}
-            disabled={page == 1}
-            className="cursor-pointer bg-[#1A1A1A] disabled:opacity-50 w-14 h-14 rounded-lg flex items-center justify-center"
-          >
-            <Image src={icons.pre} alt="pre icon" />
-          </button>
-          <div className="flex items-center gap-1">
-            {Array.from({ length: Math.ceil(movieActions.length / 5) }).map(
-              (_, index) => {
-                const isActive = page === index + 1;
-
-                return (
-                  <div
-                    key={index}
-                    className={`h-1 transition-all duration-300 rounded-full ${
-                      isActive ? "w-6 bg-[#E50000]" : "w-4 bg-[#333333]"
-                    }`}
-                  ></div>
-                );
-              }
-            )}
-          </div>
-          <button
-            onClick={() => setPage((p) => p + 1)}
-            disabled={page == Math.ceil(movieActions.length / 5)}
-            className="cursor-pointer bg-[#1A1A1A] disabled:opacity-50 w-14 h-14 rounded-lg flex items-center justify-center"
-          >
-            <Image src={icons.next} alt="pre icon" />
-          </button>
+        <div className="max-[768px]:hidden bg-[#0F0F0F] flex items-center gap-4 p-4 rounded-lg">
+          <CarouselControler
+            maxPages={maxPages}
+            page={page}
+            setPage={setPage}
+          />
         </div>
       </div>
 
-      <ul className="grid grid-cols-5 gap-7.5 transition-all duration-300">
-        {pagination.map((group, index) => (
-          <li key={index}>
-            {group.isLoading ? (
-              <div
-                key={index}
-                className="h-64 bg-zinc-900 animate-pulse rounded-xl"
-              />
-            ) : (
-              <MovieTypeCard
-                inTop={top ? true : false}
-                isLoading={isAllLoading}
-                groupMovies={group.movies}
-                type={group.type}
-              />
-            )}
-          </li>
-        ))}
-      </ul>
+      <div className="">
+        <div className="overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.ul
+              key={page}
+              initial={{ x: 50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -50, opacity: 0 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="grid grid-cols-5 gap-7.5 max-[1200px]:grid-cols-4 max-[960px]:grid-cols-3 max-[768px]:grid-cols-2"
+            >
+              {pagination.map((group, index) => (
+                <li key={group.type || index}>
+                  {group.isLoading ? (
+                    <div className="h-64 bg-[#1A1A1A] animate-pulse rounded-2xl border border-[#262626]" />
+                  ) : (
+                    <MovieTypeCard
+                      inTop={!!top}
+                      isLoading={isAllLoading}
+                      groupMovies={group.movies}
+                      type={group.type}
+                    />
+                  )}
+                </li>
+              ))}
+            </motion.ul>
+          </AnimatePresence>
+        </div>
+        <div className="hidden  max-[768px]:flex bg-[#0F0F0F] items-center max-[768px]:justify-between mt-5 gap-4 p-4 rounded-lg">
+          <CarouselControler
+            maxPages={maxPages}
+            page={page}
+            setPage={setPage}
+          />
+        </div>
+      </div>
     </div>
   );
 }

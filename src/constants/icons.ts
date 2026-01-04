@@ -24,6 +24,8 @@ import gernes from "../../public/icons/gernes.svg";
 import minus from "../../public/icons/minus.svg";
 import plus from "../../public/icons/plus.svg";
 
+import burger from "../../public/icons/burger-icon.svg";
+
 export const icons = {
   call,
   search,
@@ -46,4 +48,5 @@ export const icons = {
   gernes,
   minus,
   plus,
+  burger,
 };

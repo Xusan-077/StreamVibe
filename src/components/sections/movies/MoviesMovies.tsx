@@ -5,8 +5,8 @@ export default function MoviesMovies() {
   return (
     <section className="mb-37.5">
       <div className="container">
-        <div className="border border-[#262626] p-12.5 rounded-lg">
-          <div className="mb-25">
+        <div className="max-[640px]:border-none max-[640px]:p-0 border border-[#262626] p-12.5 rounded-lg">
+          <div className="mb-25 max-[640px]:mb-12.5">
             <MovieGenres
               title="Our Genres"
               API_URL="&vote_count.gte=200"
@@ -14,7 +14,7 @@ export default function MoviesMovies() {
               inMovie
             />
           </div>
-          <div className="mb-25">
+          <div className="mb-25 max-[640px]:mb-12.5">
             <MovieGenres
               title="Popular Top 10 In Genres"
               API_URL="sort_by=popularity.desc"
@@ -23,7 +23,7 @@ export default function MoviesMovies() {
               inMovie
             />
           </div>
-          <div className="mb-25">
+          <div className="mb-25 max-[640px]:mb-12.5">
             <MoviesTrending
               key="Trending Now"
               title="Trending Now"

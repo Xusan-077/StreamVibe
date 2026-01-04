@@ -18,7 +18,7 @@ export default function MovieTypeCard({
 }: Props) {
   return (
     <ul className="">
-      <li className="bg-[#1A1A1A] p-7.5 rounded-lg border border-[#262626]">
+      <li className="bg-[#1A1A1A] p-7.5 max-[1300px]:p-4 rounded-lg border border-[#262626]">
         <div className="grid grid-cols-2 gap-2">
           {isLoading &&
             Array.from({ length: 4 }).map((_, index) => (
@@ -33,7 +33,7 @@ export default function MovieTypeCard({
               <Link key={index} href={`/movie/${movie.id}`}>
                 <Image
                   key={movie.id}
-                  className="w-29 h-31 object-cover rounded-sm"
+                  className="max-[640px]:w-full max-[640px]:h-17 w-full h-31 object-cover rounded-sm"
                   width={115}
                   height={125}
                   src={
@@ -65,7 +65,7 @@ export default function MovieTypeCard({
         )}
 
         <div className="flex items-center justify-between">
-          <h3 className="text-[18px] font-semibold text-white">{type}</h3>
+          <h3 className="text-[18px] max-[640px]:text-[14px] font-semibold text-white">{type}</h3>
           <Image className="w-5 h-5" src={icons.arrow} alt="arrow icon" />
         </div>
       </li>

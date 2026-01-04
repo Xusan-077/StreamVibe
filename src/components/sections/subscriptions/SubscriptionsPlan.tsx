@@ -42,32 +42,32 @@ export default function SubscriptionsPlan() {
   return (
     <section>
       <div className="container">
-        <div className="mb-37.5 mt-25">
-          <div className="flex justify-between mb-20">
-            <div className="">
+        <div className="mb-37.5 max-[640px]:mt-10 mt-25 max-[640px]:mb-20">
+          <div className="flex justify-between mb-20 items-center gap-10 max-[640px]:block">
+            <div className="max-[640px]:mb-5">
               <Subtitle text="Choose the plan that's right for you" />
               <Text text="Join StreamVibe and select from our flexible subscription options tailored to suit your viewing preferences. Get ready for non-stop entertainment!" />
             </div>
-            <div className="bg-[#0F0F0F] rounded-lg p-2 flex items-center">
+            <div className="bg-[#0F0F0F] rounded-lg p-2 flex">
               <div
                 onClick={() => setIsActive("Monthly")}
                 className={`${
                   isActive == "Monthly" ? "bg-[#1F1F1F] rounded-lg" : ""
-                } transition-all duration-300 p-[14_24px] text-white rounded-lg cursor-pointer`}
+                } transition-all w-full text-center duration-300 p-[14px_24px] cursor-pointer`}
               >
-                <span className="">Monthly</span>
+                <span className="text-white block">Monthly</span>
               </div>
               <div
                 onClick={() => setIsActive("Yearly")}
                 className={`${
                   isActive == "Yearly" ? "bg-[#1F1F1F] rounded-lg" : ""
-                } transition-all duration-300 p-[14_24px] text-white rounded-lg cursor-pointer`}
+                } transition-all w-full text-center duration-300 p-[14_24px] cursor-pointer`}
               >
-                <span className="">Yearly</span>
+                <span className="text-white block">Yearly</span>
               </div>
             </div>
           </div>
-          <ol className="grid grid-cols-3 gap-7.5">
+          <ol className="grid grid-cols-3 gap-7.5 max-[1100px]:grid-cols-1">
             {palns.map((el) => (
               <PlanCard {...el} key={el.id} isActive={isActive} />
             ))}

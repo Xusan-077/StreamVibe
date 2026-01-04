@@ -6,16 +6,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-
-interface INav {
-  label: string;
-  path: string;
-}
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
   const pathname = usePathname();
-
-  const [showHeader, setShowHeader] = useState<boolean>(true);
+  const [burgerShown, setBurgerShown] = useState(false);
+  const [showHeader, setShowHeader] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
   const lastScroll = useRef(0);
 
   useEffect(() => {
@@ -24,9 +21,13 @@ export default function Header() {
 
       if (currentScroll > lastScroll.current && currentScroll > 100) {
         setShowHeader(false);
+        setBurgerShown(false);
       } else {
         setShowHeader(true);
       }
+
+      setIsScrolled(currentScroll > 50);
+
       lastScroll.current = currentScroll;
     };
 
@@ -34,67 +35,109 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks: INav[] = [
-    { label: "Home", path: "/" },
-    { label: "Movies & Shows", path: "/movies" },
-    { label: "Support", path: "/support" },
-    { label: "Subscriptions", path: "/subscriptions" },
-  ];
+  useEffect(() => {
+    setBurgerShown(false);
+  }, [pathname]);
 
-  const noHeaderPaths = ["/search"];
-
-  if (noHeaderPaths.includes(pathname)) {
-    return null;
-  }
+  if (pathname === "/search") return null;
 
   return (
     <header
-      className={`${
-        showHeader ? "translate-y-0" : "-translate-y-full"
-      } py-5 backdrop-blur-md fixed top-0 left-0 z-50 w-full transition-transform duration-300`}
+      className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 py-5 
+        ${showHeader ? "translate-y-0" : "-translate-y-full"} 
+        ${
+          isScrolled
+            ? "backdrop-blur-md bg-[#0F0F0F]/80 border-b border-[#1F1F1F]"
+            : "bg-transparent"
+        }
+      `}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <Link href="/">
             <Image
               src={images.logo}
-              alt="StreamVibe Logo"
+              alt="Logo"
               width={160}
               height={40}
-              className="w-auto h-auto"
+              priority
+              className="w-32 md:w-40 h-auto"
             />
           </Link>
 
-          <nav className="flex items-center border-4 border-[#1F1F1FFF] rounded-xl justify-between gap-2 p-2 bg-[#0F0F0FFF]">
-            {navLinks.map((link, index) => {
-              const isActive = pathname === link.path;
-
-              return (
-                <Link
-                  key={index}
-                  href={link.path}
-                  className={`px-6 py-3 rounded-lg transition-all duration-300 ${
-                    isActive
-                      ? "bg-[#1A1A1A] text-white"
-                      : "text-[#E4E4E7] hover:text-white"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
+          <nav className="hidden lg:flex items-center border-4 border-[#1F1F1F] rounded-xl p-2 bg-[#0F0F0F]">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                href={link.path}
+                className={`px-6 py-3 rounded-lg transition-all duration-300 ${
+                  pathname === link.path
+                    ? "bg-[#1A1A1A] text-white"
+                    : "text-[#E4E4E7] hover:text-white"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
           </nav>
 
-          <div className="flex items-center">
-            <Link href="/search" className="p-4">
-              <Image src={icons.search} alt="search icon" />
+          <div className="hidden lg:flex items-center gap-2">
+            <Link
+              href="/search"
+              className="p-4 hover:opacity-70 transition-opacity"
+            >
+              <Image src={icons.search} alt="search" width={24} height={24} />
             </Link>
-            <div className="p-4 cursor-pointer">
-              <Image src={icons.call} alt="call icon" />
-            </div>
+            <button className="p-4 hover:opacity-70 transition-opacity">
+              <Image src={icons.call} alt="call" width={24} height={24} />
+            </button>
           </div>
+
+          <button
+            onClick={() => setBurgerShown(!burgerShown)}
+            className="lg:hidden bg-[#1A1A1A] border border-[#262626] rounded-lg w-12 h-12 flex items-center justify-center active:scale-95 transition-transform"
+          >
+            <Image
+              src={icons.burger}
+              alt="menu"
+              width={24}
+              height={24}
+            />
+          </button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {burgerShown && (
+          <motion.nav
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="lg:hidden absolute top-full left-4 right-4 mt-2 flex flex-col border-4 border-[#1F1F1F] rounded-xl p-2 bg-[#0F0F0F] shadow-2xl"
+          >
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                href={link.path}
+                className={`px-6 py-4 rounded-lg text-center transition-all ${
+                  pathname === link.path
+                    ? "bg-[#1A1A1A] text-white"
+                    : "text-[#E4E4E7]"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
+
+const navLinks = [
+  { label: "Home", path: "/" },
+  { label: "Movies & Shows", path: "/movies" },
+  { label: "Support", path: "/support" },
+  { label: "Subscriptions", path: "/subscriptions" },
+];

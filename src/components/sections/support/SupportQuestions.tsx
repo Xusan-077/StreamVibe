@@ -13,7 +13,7 @@ interface IFaqs {
 }
 
 export default function SupportQuestions() {
-  const [openId, setOpenId] = useState<string | null>("01");
+  const [openId, setOpenId] = useState<string | null>("");
 
   const faqData: IFaqs[] = [
     {
@@ -70,11 +70,11 @@ export default function SupportQuestions() {
     <section>
       <div className="container">
         <div className="mb-37.5">
-          <div className="mb-20">
+          <div className="mb-20 max-[640px]:mb-10">
             <Subtitle text="Frequently Asked Questions" />
             <Text text="Got questions? We've got answers! Check out our FAQ section to find answers to the most common questions about StreamVibe." />
           </div>
-          <div className="grid grid-cols-2 gap-x-20 gap-y-5 ">
+          <div className="grid grid-cols-2 gap-x-20 gap-y-5 max-[1024px]:grid-cols-1">
             {faqData.map((faq) => (
               <div
                 key={faq.id}
@@ -88,7 +88,7 @@ export default function SupportQuestions() {
                     <div className="bg-[#1A1A1A] border border-[#262626] p-4 rounded-lg text-white font-bold text-lg">
                       {faq.id}
                     </div>
-                    <h3 className="text-white text-xl font-medium group-hover:text-zinc-300 transition-colors">
+                    <h3 className="text-white max-[640px]:text-[18px] max-[640px]:max-w-58 text-xl font-medium group-hover:text-zinc-300 transition-colors">
                       {faq.question}
                     </h3>
                   </div>
@@ -110,7 +110,7 @@ export default function SupportQuestions() {
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="text-zinc-400 pl-[76px] text-lg">
+                    <p className="text-zinc-400 pl-19 max-[640px]:text-[14px] text-lg">
                       {faq.answer}
                     </p>
                   </div>

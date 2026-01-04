@@ -9,8 +9,8 @@ export default function Welcome() {
   return (
     <section>
       <div className="container">
-        <div className="mb-37.5 mt-25 grid grid-cols-[1fr_2fr] gap-20">
-          <div className="">
+        <div className="mb-37.5 max-[640px]:mt-10 mt-25 max-[640px]:mb-20 max-[1100px]:grid-cols-1 grid grid-cols-[1fr_2fr] gap-20">
+          <div className="max-[640px]:mb-12.5">
             <div className="mb-12.5">
               <div className="max-w-100 mb-5">
                 <Subtitle text="Welcome to our support page!" />
@@ -21,9 +21,9 @@ export default function Welcome() {
               <Image src={images.supportImage} alt="support page image" />
             </div>
           </div>
-          <div className="bg-[#0F0F0F] border border-[#262626] p-12.5 rounded-lg">
+          <div className="bg-[#0F0F0F] border border-[#262626] p-12.5 rounded-lg max-[640px]:p-6">
             <form onSubmit={(e) => e.preventDefault()} className="">
-              <div className="grid grid-cols-2 gap-12.5 mb-12.5">
+              <div className="grid grid-cols-2 gap-12.5 max-[768px]:gap-4 mb-12.5 max-[768px]:mb-5 max-[768px]:grid-cols-1">
                 <label className="">
                   <span className="block text-[18px] font-semibold mb-4 text-white">
                     First Name
@@ -65,7 +65,7 @@ export default function Welcome() {
                   />
                 </label>
               </div>
-              <div className="mb-12.5">
+              <div className="mb-12.5 max-[768px]:mb-5">
                 <label className="">
                   <span className="block text-[18px] font-semibold mb-4 text-white">
                     Message
@@ -76,7 +76,7 @@ export default function Welcome() {
                   ></textarea>
                 </label>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between max-[768px]:block">
                 <label className="flex items-center gap-2">
                   <div className="relative flex items-center">
                     <input
@@ -101,7 +101,7 @@ export default function Welcome() {
                   </span>
                 </label>
                 <button
-                  className="p-[18px_24px] bg-[#E50000] rounded-lg text-white text-[18px] font-semibold"
+                  className="p-[18px_24px] bg-[#E50000] max-[768px]:w-full max-[768px]:mt-5 rounded-lg text-white text-[18px] font-semibold"
                   type="submit"
                 >
                   Send Message
