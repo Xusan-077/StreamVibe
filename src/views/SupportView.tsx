@@ -1,11 +1,13 @@
+import HomeStart from "@/components/sections/home/HomeStart";
+import SupportQuestions from "@/components/sections/support/SupportQuestions";
+import Welcome from "@/components/sections/support/SupportWelcome";
+
 export default function SupportView() {
   return (
-    <section>
-      <div className="container">
-        <div className="">
-          <div>Support</div>
-        </div>
-      </div>
-    </section>
+    <>
+      <Welcome />
+      <SupportQuestions />
+      <HomeStart />
+    </>
   );
 }

@@ -7,9 +7,15 @@ interface Props {
   groupMovies: IMovie[];
   type: string;
   isLoading: boolean;
+  inTop?: boolean;
 }
 
-export default function MovieTypeCard({ groupMovies, type, isLoading }: Props) {
+export default function MovieTypeCard({
+  groupMovies,
+  type,
+  isLoading,
+  inTop,
+}: Props) {
   return (
     <ul className="">
       <li className="bg-[#1A1A1A] p-7.5 rounded-lg border border-[#262626]">
@@ -24,7 +30,7 @@ export default function MovieTypeCard({ groupMovies, type, isLoading }: Props) {
 
           {groupMovies &&
             groupMovies?.map((movie: IMovie, index) => (
-              <Link href={`/movie/${movie.id}`}>
+              <Link key={index} href={`/movie/${movie.id}`}>
                 <Image
                   key={movie.id}
                   className="w-29 h-31 object-cover rounded-sm"
@@ -50,6 +56,14 @@ export default function MovieTypeCard({ groupMovies, type, isLoading }: Props) {
               </Link>
             ))}
         </div>
+        {inTop && (
+          <div className="bg-[#E50000] p-[3px_10px] inline-block rounded-sm">
+            <span className="text-[16px] text-white font-semibold">
+              Top 10 In
+            </span>
+          </div>
+        )}
+
         <div className="flex items-center justify-between">
           <h3 className="text-[18px] font-semibold text-white">{type}</h3>
           <Image className="w-5 h-5" src={icons.arrow} alt="arrow icon" />

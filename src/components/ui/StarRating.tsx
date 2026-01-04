@@ -8,7 +8,7 @@ export default function StarRating({ voteAverage }: Props) {
   const rating = voteAverage / 2;
 
   return (
-    <div className="flex items-center gap-1 bg-[#141414] p-4 border border-[#262626] rounded-lg">
+    <div className="flex items-center gap-1">
       {Array.from({ length: 5 }).map((_, index) => {
         const starNumber = index + 1;
 

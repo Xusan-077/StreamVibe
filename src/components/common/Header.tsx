@@ -41,6 +41,12 @@ export default function Header() {
     { label: "Subscriptions", path: "/subscriptions" },
   ];
 
+  const noHeaderPaths = ["/search"];
+
+  if (noHeaderPaths.includes(pathname)) {
+    return null;
+  }
+
   return (
     <header
       className={`${
@@ -80,9 +86,9 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center">
-            <div className="p-4 cursor-pointer">
+            <Link href="/search" className="p-4">
               <Image src={icons.search} alt="search icon" />
-            </div>
+            </Link>
             <div className="p-4 cursor-pointer">
               <Image src={icons.call} alt="call icon" />
             </div>

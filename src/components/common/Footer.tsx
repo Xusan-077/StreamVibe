@@ -1,8 +1,19 @@
+"use client";
+
 import { icons } from "@/constants/icons";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  const noHeaderPaths = ["/search"];
+
+  if (noHeaderPaths.includes(pathname)) {
+    return null;
+  }
+
   return (
     <footer className="bg-[#0F0F0F] py-25">
       <div className="container">

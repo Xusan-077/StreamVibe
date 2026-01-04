@@ -64,7 +64,9 @@ export default function MovieDetailMain() {
 
       return res?.data;
     },
+    enabled: !!movieId,
   });
+
   const getMainVideo = (videos: { results: IMovieVideo[] } | undefined) => {
     if (!videos || !videos.results || videos.results.length === 0) {
       return null;
@@ -324,7 +326,7 @@ export default function MovieDetailMain() {
                 </ul>
               </div>
               <div className="mb-7.5">
-                <div className="flex items-center gap-1 mb-2.5">
+                <div className="flex items-center gap-1 mb-5">
                   <Image src={icons.ratings} alt="released icom" />
                   <span className="text-[18px] text-[#999999] font-medium">
                     Ratings

@@ -21,6 +21,9 @@ import languages from "../../public/icons/languages.svg";
 import ratings from "../../public/icons/ratings.svg";
 import gernes from "../../public/icons/gernes.svg";
 
+import minus from "../../public/icons/minus.svg";
+import plus from "../../public/icons/plus.svg";
+
 export const icons = {
   call,
   search,
@@ -41,4 +44,6 @@ export const icons = {
   languages,
   ratings,
   gernes,
+  minus,
+  plus,
 };

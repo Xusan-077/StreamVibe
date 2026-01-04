@@ -5,7 +5,6 @@ import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import Provider from "@/components/Provider";
 
-// Fontni sozlaymiz
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
@@ -16,6 +15,7 @@ export const metadata: Metadata = {
   title: "StreamVibe | Eng yaxshi filmlar platformasi",
   description: "TMDB orqali eng so'nggi va ommabop filmlarni tomosha qiling",
 };
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -24,11 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${manrope.variable} antialiased`}>
-        <Provider>
-          <Header />
-          <main className="pt-25">{children}</main>
-          <Footer />
-        </Provider>
+        <Header />
+        <Provider>{children}</Provider>
+        <Footer />
       </body>
     </html>
   );

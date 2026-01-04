@@ -69,6 +69,7 @@ export interface IMovieDetails {
   vote_average: number;
   vote_count: number;
 }
+
 export interface ICrew {
   adult: boolean;
   gender: number;

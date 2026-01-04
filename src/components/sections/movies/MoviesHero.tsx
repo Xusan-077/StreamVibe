@@ -38,6 +38,7 @@ export default function MoviesHero() {
 
       return res?.data;
     },
+    enabled: !!movie && !!movie[0]?.id,
   });
   const getMainVideo = (videos: { results: IMovieVideo[] } | undefined) => {
     if (!videos || !videos.results || videos.results.length === 0) {

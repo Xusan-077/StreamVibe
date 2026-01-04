@@ -2,6 +2,7 @@
 
 body {
   background-color: #141414FF;
+  font-family: var(--font-manrope), sans-serif;
 }
 
 .container {
@@ -64,12 +65,9 @@ body {
   min-height: 860px;
   display: flex;
   align-items: flex-end;
-  /* Kontentni pastga tushiradi */
   overflow: hidden;
-  /* transform: translateY(-30px); <- Bu Navbar bilan ustma-ust tushishi uchun ishlatiladi */
 }
 
-/* Agar rasmga alohida effekt bermoqchi bo'lsangiz */
 .movies-hero-bg {
   position: absolute;
   top: 0;
