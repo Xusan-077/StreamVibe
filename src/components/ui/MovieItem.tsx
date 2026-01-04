@@ -28,14 +28,11 @@ export default function MovieItem({ movie }: Props) {
           />
 
           <div className="absolute inset-0 bg-gradient-to-t from-[#0F0F0F] via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-4">
-            <Link
-              href={`/movie/${movie.id}`}
-              className="w-full bg-[#E50000] py-2.5 rounded-lg transform translate-y-4 group-hover:translate-y-0 transition-all hover:bg-[#ff1a1a]"
-            >
+            <button className="w-full bg-[#E50000] py-2.5 rounded-lg transform translate-y-4 group-hover:translate-y-0 transition-all hover:bg-[#ff1a1a]">
               <span className="text-white font-bold block text-center text-sm">
                 Watch Now
               </span>
-            </Link>
+            </button>
           </div>
         </div>
 
