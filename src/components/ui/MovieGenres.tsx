@@ -5,7 +5,7 @@ import { API } from "@/services/API";
 import { useQueries } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
-import MovieTypeCard from "../MovieTypeCard";
+import MovieTypeCard from "./MovieTypeCard";
 import Subtitle from "./Subtitle";
 import Text from "./Text";
 import { AnimatePresence, motion } from "framer-motion";

@@ -1,6 +1,6 @@
 "use client";
 
-import MovieTypeCard from "@/components/MovieTypeCard";
+import MovieTypeCard from "@/components/ui/MovieTypeCard";
 import Subtitle from "@/components/ui/Subtitle";
 import { icons } from "@/constants/icons";
 import { API } from "@/services/API";
