@@ -10,6 +10,7 @@ import { IApiResponse, IMovie } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface Props {
   url: string;
@@ -51,15 +52,22 @@ export default function MoviesTrending({ url, title, key }: Props) {
         </div>
       </div>
       <div className="">
-        <ul
-          className={`${
-            width > 1200 ? "grid-cols-4" : "grid-cols-3"
-          }  max-[900px]:grid-cols-2 grid gap-5`}
-        >
-          {pagination?.map((el) => (
-            <MovieItem key={el.id} movie={el} />
-          ))}
-        </ul>
+        <AnimatePresence mode="wait">
+          <motion.ul
+            key={page}
+            initial={{ x: 50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -50, opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className={`${
+              width > 1200 ? "grid-cols-4" : "grid-cols-3"
+            }  max-[900px]:grid-cols-2 grid gap-5`}
+          >
+            {pagination?.map((el) => (
+              <MovieItem key={el.id} movie={el} />
+            ))}
+          </motion.ul>
+        </AnimatePresence>
         <div className="hidden max-[768px]:flex max-[768px]:mt-5 bg-[#0F0F0F] justify-between items-center gap-4 p-4 rounded-lg">
           <CarouselControler
             maxPages={maxPages}

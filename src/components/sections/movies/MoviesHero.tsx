@@ -10,6 +10,7 @@ import {
   IMovieVideoResponse,
 } from "@/types";
 import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -65,72 +66,79 @@ export default function MoviesHero() {
   };
 
   return (
-    <section
-      className="relative mb-45 max-[640px]:mb-20 w-full px-6 min-h-215 flex items-end pb-20 overflow-hidden bg-cover bg-top bg-no-repeat"
-      style={{
-        backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(15,15,15,0.8) 50%, rgba(15,15,15,1) 100%), url(https://image.tmdb.org/t/p/original${
-          movie && movie[0]?.backdrop_path
-        })`,
-      }}
-    >
-      <div className="container">
-        <div className="relative z-10 text-center">
-          <h1 className="text-white text-5xl max-[640px]:text-[24px] font-bold mb-4">
-            {movie && movie[0]?.title}
-          </h1>
-          {width > 640 ? (
-            <p className="text-[#999999] max-w-300 mx-auto mb-10">
-              {movie && movie[0]?.overview}
-            </p>
-          ) : (
-            ""
-          )}
+    <AnimatePresence mode="wait">
+      <motion.section
+        key={movie?.[0]?.id}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="relative mb-45 max-[640px]:mb-20 w-full px-6 min-h-[80vh] flex items-end pb-20 overflow-hidden bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(15,15,15,0.9) 70%, rgba(15,15,15,1) 100%), url(https://image.tmdb.org/t/p/original${movie?.[0]?.backdrop_path})`,
+        }}
+      >
+        <section className="relative mb-45 max-[640px]:mb-20 w-full px-6 min-h-215 flex items-end pb-20 overflow-hidden bg-cover bg-top bg-no-repeat">
+          <div className="container">
+            <div className="relative z-10 text-center">
+              <h1 className="text-white text-5xl max-[640px]:text-[24px] font-bold mb-4">
+                {movie && movie[0]?.title}
+              </h1>
+              {width > 640 ? (
+                <p className="text-[#999999] max-w-300 mx-auto mb-10">
+                  {movie && movie[0]?.overview}
+                </p>
+              ) : (
+                ""
+              )}
 
-          <div className="flex justify-center gap-4">
-            <button
-              onClick={handlePlayClick}
-              className="bg-[#E50000] max-[640px]:w-full justify-center cursor-pointer px-8 py-4 flex items-center rounded-lg gap-2"
-            >
-              <Image src={icons.start} alt="start icon" />
-              <span className="text-white font-semibold">Play Now</span>
-            </button>
-          </div>
-          <div className="">
-            <div className="flex items-center justify-between mt-12.5 max-[640px]:mt-5">
-              <button
-                disabled={page == 0}
-                className="bg-[#0F0F0F] rounded-lg disabled:opacity-50 w-14 h-14 flex items-center justify-center cursor-pointer"
-                onClick={() => setPage((p) => p - 1)}
-              >
-                <Image src={icons.pre} alt="pre icon" />
-              </button>
-              <div className="flex items-center">
-                <div className="flex items-center gap-1.5">
-                  {movies?.slice(0, 5).map((_, index) => {
-                    const isActive = page === index;
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={handlePlayClick}
+                  className="bg-[#E50000] max-[640px]:w-full justify-center cursor-pointer px-8 py-4 flex items-center rounded-lg gap-2"
+                >
+                  <Image src={icons.start} alt="start icon" />
+                  <span className="text-white font-semibold">Play Now</span>
+                </button>
+              </div>
+              <div className="">
+                <div className="flex items-center justify-between mt-12.5 max-[640px]:mt-5">
+                  <button
+                    disabled={page == 0}
+                    className="bg-[#0F0F0F] rounded-lg disabled:opacity-50 w-14 h-14 flex items-center justify-center cursor-pointer"
+                    onClick={() => setPage((p) => p - 1)}
+                  >
+                    <Image src={icons.pre} alt="pre icon" />
+                  </button>
+                  <div className="flex items-center">
+                    <div className="flex items-center gap-1.5">
+                      {movies?.slice(0, 5).map((_, index) => {
+                        const isActive = page === index;
 
-                    return (
-                      <div
-                        key={index}
-                        className={`h-1 transition-all duration-300 rounded-full ${
-                          isActive ? "w-6 bg-[#E50000]" : "w-4 bg-[#333333]"
-                        }`}
-                      ></div>
-                    );
-                  })}
+                        return (
+                          <div
+                            key={index}
+                            className={`h-1 transition-all duration-300 rounded-full ${
+                              isActive ? "w-6 bg-[#E50000]" : "w-4 bg-[#333333]"
+                            }`}
+                          ></div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setPage((p) => p + 1)}
+                    disabled={movies && page == movies?.length - 1}
+                    className="bg-[#0F0F0F] disabled:opacity-50 rounded-lg w-14 h-14 flex items-center justify-center cursor-pointer"
+                  >
+                    <Image src={icons.next} alt="next icon" />
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={() => setPage((p) => p + 1)}
-                disabled={movies && page == movies?.length - 1}
-                className="bg-[#0F0F0F] disabled:opacity-50 rounded-lg w-14 h-14 flex items-center justify-center cursor-pointer"
-              >
-                <Image src={icons.next} alt="next icon" />
-              </button>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
+      </motion.section>
+    </AnimatePresence>
   );
 }
