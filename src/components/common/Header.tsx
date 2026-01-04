@@ -93,17 +93,20 @@ export default function Header() {
             </button>
           </div>
 
-          <button
-            onClick={() => setBurgerShown(!burgerShown)}
-            className="lg:hidden bg-[#1A1A1A] border border-[#262626] rounded-lg w-12 h-12 flex items-center justify-center active:scale-95 transition-transform"
-          >
-            <Image
-              src={icons.burger}
-              alt="menu"
-              width={24}
-              height={24}
-            />
-          </button>
+          <div className="flex items-center gap-2 lg:hidden ">
+            <Link
+              href="/search"
+              className="p-4 hover:opacity-70 transition-opacity"
+            >
+              <Image src={icons.search} alt="search" width={24} height={24} />
+            </Link>
+            <button
+              onClick={() => setBurgerShown(!burgerShown)}
+              className="bg-[#1A1A1A] border border-[#262626] rounded-lg w-12 h-12 flex items-center justify-center active:scale-95 transition-transform"
+            >
+              <Image src={icons.burger} alt="menu" width={24} height={24} />
+            </button>
+          </div>
         </div>
       </div>
 

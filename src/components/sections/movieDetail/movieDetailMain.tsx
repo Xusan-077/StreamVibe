@@ -15,11 +15,14 @@ import Image from "next/image";
 import { icons } from "@/constants/icons";
 import StarRating from "@/components/ui/StarRating";
 import { useState } from "react";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 export default function MovieDetailMain() {
+  const { width } = useWindowSize();
+
   const [creditsPage, setCreditsPage] = useState<number>(1);
   const [reviewsPage, setReviewsPage] = useState<number>(1);
-  const ITEMS_PER_PAGE = 8;
+  const ITEMS_PER_PAGE = width >= 1200 ? 8 : width >= 768 ? 6 : 6;
 
   const { movieId } = useParams();
 
@@ -52,8 +55,9 @@ export default function MovieDetailMain() {
       return res.data.results;
     },
   });
-  const reviewsStartIndex = (reviewsPage - 1) * 2;
-  const reviewsEndIndex = reviewsStartIndex + 2;
+  const reviewsTotalPages = width < 850 ? 1 : 2;
+  const reviewsStartIndex = (reviewsPage - 1) * reviewsTotalPages;
+  const reviewsEndIndex = reviewsStartIndex + reviewsTotalPages;
   const reviewsPagonation = reviews?.slice(reviewsStartIndex, reviewsEndIndex);
 
   // video
@@ -95,17 +99,21 @@ export default function MovieDetailMain() {
       <div className="container">
         <div className="mb-37.5">
           <div
-            className="relative mb-25 w-full min-h-210 rounded-t-lg flex items-end pb-20 overflow-hidden bg-cover bg-top bg-no-repeat"
+            className="relative mb-25 max-[640px]:mb-20 w-full min-h-210 rounded-t-lg flex items-end pb-20 overflow-hidden bg-cover bg-top bg-no-repeat"
             style={{
               backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(15,15,15,0.8) 50%, rgba(15,15,15,1) 100%), url(https://image.tmdb.org/t/p/original${movie?.backdrop_path})`,
             }}
           >
             <div className="mx-auto">
               <div className="text-center">
-                <h1 className="text-white text-5xl font-bold mb-4">
+                <h1 className="text-white max-[640px]:text-[24px] text-5xl font-bold mb-4">
                   {movie?.title}
                 </h1>
-                <p className="text-[#999999] max-w-300 mx-auto mb-10">
+                <p
+                  className={`${
+                    width < 640 ? "hidden" : ""
+                  } text-[#999999] max-w-300 mx-auto mb-10`}
+                >
                   {movie?.overview}
                 </p>
               </div>
@@ -122,19 +130,19 @@ export default function MovieDetailMain() {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-[3fr_1fr] gap-5 items-start">
-            <div className="">
-              <div className="bg-[#1A1A1A] p-12.5 rounded-lg mb-7.5">
+          <div className="grid grid-cols-[3fr_1fr] max-[1200px]:flex max-[1200px]:flex-col-reverse gap-5 items-start">
+            <div className="w-full">
+              <div className="bg-[#1A1A1A] p-12.5 max-[768px]:p-6 rounded-lg mb-7.5">
                 <h4 className="text-[18px] mb-2.5 font-medium text-[#999999]">
                   Description
                 </h4>
-                <p className="text-[18px] font-medium text-white">
+                <p className="text-[18px] font-medium text-white max-[640px]:text-[14px]">
                   {movie?.overview}
                 </p>
               </div>
-              <div className="bg-[#1A1A1A] p-12.5 rounded-lg mb-7.5">
-                <div className="flex items-center justify-between mb-7.5">
-                  <h4 className="text-[18px] mb-2.5 font-medium text-[#999999]">
+              <div className="bg-[#1A1A1A] p-12.5 max-[768px]:p-6 rounded-lg mb-7.5">
+                <div className="flex items-center justify-between mb-7.5 flex-wrap">
+                  <h4 className="text-[18px] max-[450px]:mb-5 mb-2.5 font-medium text-[#999999]">
                     Cast
                   </h4>
                   <div className="flex items-center gap-2.5">
@@ -154,9 +162,11 @@ export default function MovieDetailMain() {
                         <Image src={icons.pre} alt="pre icon" className="" />
                       </button>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="max-[640px]:hidden flex items-center gap-1">
                       {Array.from({
-                        length: Math.ceil(Number(credits?.cast.length) / 8),
+                        length: Math.ceil(
+                          Number(credits?.cast.length) / ITEMS_PER_PAGE
+                        ),
                       }).map((_, index) => {
                         const isActive = creditsPage === index + 1;
 
@@ -188,13 +198,13 @@ export default function MovieDetailMain() {
                   </div>
                 </div>
 
-                <ul className="flex items-center justify-between">
+                <ul className="flex items-center justify-between flex-wrap">
                   {creditsPagonation?.map((el) => (
                     <li key={el.id} className="">
                       <Image
                         width={104}
                         height={112}
-                        className="w-26 h-28 rounded-2xl"
+                        className="max-[640px]:w-18 max-[640px]:h-18 w-26 h-28 rounded-2xl"
                         src={
                           el?.profile_path
                             ? `https://image.tmdb.org/t/p/w200${el.profile_path}`
@@ -207,7 +217,7 @@ export default function MovieDetailMain() {
                   <li className=""></li>
                 </ul>
               </div>
-              <div className="bg-[#1A1A1A] p-12.5 rounded-lg">
+              <div className="bg-[#1A1A1A] p-12.5 max-[768px]:p-6 rounded-lg">
                 <div className="mb-10">
                   <h4 className="text-[18px] mb-2.5 font-medium text-[#999999]">
                     Reviews
@@ -219,14 +229,18 @@ export default function MovieDetailMain() {
                       No Reviews Yet
                     </div>
                   )}
-                  <ul className="grid grid-cols-2 gap-5">
+                  <ul
+                    className={`${
+                      width < 850 ? "grid-cols-1" : "grid-cols-2"
+                    } grid  gap-5`}
+                  >
                     {reviewsPagonation?.map((el) => (
                       <li
                         key={el.id}
                         className="bg-[#0F0F0F] p-10 border border-[#262626] rounded-lg"
                       >
                         <div className="">
-                          <div className="mb-5 flex items-center justify-between">
+                          <div className="mb-5 flex items-center justify-between flex-wrap gap-2">
                             <h3 className="text-[20px] font-medium text-white">
                               {el.author}
                             </h3>
@@ -251,7 +265,9 @@ export default function MovieDetailMain() {
                           onClick={() =>
                             reviewsPage == 1
                               ? setReviewsPage(
-                                  Math.ceil(Number(reviews?.length) / 2)
+                                  Math.ceil(
+                                    Number(reviews?.length) / reviewsTotalPages
+                                  )
                                 )
                               : setReviewsPage((p) => p - 1)
                           }
@@ -262,7 +278,9 @@ export default function MovieDetailMain() {
                       </div>
                       <div className="flex items-center gap-1">
                         {Array.from({
-                          length: Math.ceil(Number(reviews?.length) / 2),
+                          length: Math.ceil(
+                            Number(reviews?.length) / reviewsTotalPages
+                          ),
                         }).map((_, index) => {
                           const isActive = reviewsPage === index + 1;
 
@@ -281,7 +299,10 @@ export default function MovieDetailMain() {
                       <div className="">
                         <button
                           onClick={() =>
-                            reviewsPage >= Math.ceil((reviews?.length || 0) / 2)
+                            reviewsPage >=
+                            Math.ceil(
+                              (reviews?.length || 0) / reviewsTotalPages
+                            )
                               ? setReviewsPage(1)
                               : setReviewsPage((p) => p + 1)
                           }
@@ -295,7 +316,7 @@ export default function MovieDetailMain() {
                 </div>
               </div>
             </div>
-            <div className="bg-[#1A1A1A] p-12.5 rounded-lg">
+            <div className="bg-[#1A1A1A] p-12.5 rounded-lg w-full max-[768px]:p-6">
               <div className="mb-7.5">
                 <div className="flex items-center gap-1 mb-2.5">
                   <Image src={icons.released} alt="released icom" />
