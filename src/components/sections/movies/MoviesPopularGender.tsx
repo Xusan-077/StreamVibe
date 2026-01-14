@@ -116,7 +116,6 @@ export default function MoviesPopularGender() {
                 />
               ) : (
                 <MovieTypeCard
-                  isLoading={isAllLoading}
                   groupMovies={group.movies}
                   type={group.type}
                 />
