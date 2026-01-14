@@ -12,7 +12,7 @@ export default function MovieItem({ movie }: Props) {
   const { width } = useWindowSize();
 
   return (
-    <li className="group bg-[#1A1A1A] p-5 max-[640px]:p-4 rounded-xl border border-[#262626] transition-all hover:border-[#E50000]/50">
+    <div className="group bg-[#1A1A1A] p-5 max-[640px]:p-4 rounded-xl border border-[#262626] transition-all hover:border-[#E50000]/50">
       <Link href={`/movie/${movie.id}`}>
         <div className="relative overflow-hidden rounded-lg mb-5">
           <Image
@@ -49,6 +49,6 @@ export default function MovieItem({ movie }: Props) {
           )}
         </div>
       </Link>
-    </li>
+    </div>
   );
 }

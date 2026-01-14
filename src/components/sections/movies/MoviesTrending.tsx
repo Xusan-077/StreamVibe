@@ -3,77 +3,63 @@
 import CarouselControler from "@/components/ui/CarouselControler";
 import MovieItem from "@/components/ui/MovieItem";
 import Subtitle from "@/components/ui/Subtitle";
-import { icons } from "@/constants/icons";
-import { useWindowSize } from "@/hooks/useWindowSize";
 import { API } from "@/services/API";
 import { IApiResponse, IMovie } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import useEmblaCarousel from "embla-carousel-react";
 
 interface Props {
   url: string;
   title: string;
-  key: string;
+  queryKey: string;
 }
 
-export default function MoviesTrending({ url, title, key }: Props) {
-  const { width } = useWindowSize();
+export default function MoviesTrending({ url, title, queryKey }: Props) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "start",
+    loop: true,
+    slidesToScroll: 5,
+    breakpoints: {
+      "(max-width: 1280px)": { slidesToScroll: 4 },
+      "(max-width: 1024px)": { slidesToScroll: 3 },
+      "(max-width: 768px)": { slidesToScroll: 2 },
+      "(max-width: 480px)": { slidesToScroll: 1 },
+    },
+  });
 
-  const [page, setPage] = useState<number>(1);
-  const totalPage = width >= 1200 ? 4 : width >= 768 ? 3 : 2;
-
-  const { data } = useQuery({
-    queryKey: [`${key}`],
+  const { data: trendMovies } = useQuery({
+    queryKey: [queryKey],
     queryFn: async () => {
       const res = await API.get<IApiResponse<IMovie[]>>(url);
-
       return res?.data;
     },
   });
 
-  const start = (page - 1) * totalPage;
-  const end = start + totalPage;
-
-  const pagination = data?.results.slice(start, end);
-  const maxPages = Math.ceil(Number(data?.results?.length) / totalPage);
-
   return (
-    <div className="">
+    <div className="w-full">
       <div className="flex items-center justify-between mb-12.5">
         <Subtitle text={title} />
-        <div className="max-[768px]:hidden bg-[#0F0F0F] flex items-center gap-4 p-4 rounded-lg">
-          <CarouselControler
-            maxPages={maxPages}
-            page={page}
-            setPage={setPage}
-          />
+        <div className="hidden md:flex bg-[#0F0F0F] items-center gap-4 p-4 rounded-lg border border-[#262626]">
+          <CarouselControler emblaApi={emblaApi} />
         </div>
       </div>
-      <div className="">
-        <AnimatePresence mode="wait">
-          <motion.ul
-            key={page}
-            initial={{ x: 50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -50, opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className={`${
-              width > 1200 ? "grid-cols-4" : "grid-cols-3"
-            }  max-[900px]:grid-cols-2 grid gap-5`}
-          >
-            {pagination?.map((el) => (
-              <MovieItem key={el.id} movie={el} />
-            ))}
-          </motion.ul>
-        </AnimatePresence>
-        <div className="hidden max-[768px]:flex max-[768px]:mt-5 bg-[#0F0F0F] justify-between items-center gap-4 p-4 rounded-lg">
-          <CarouselControler
-            maxPages={maxPages}
-            page={page}
-            setPage={setPage}
-          />
+
+      <div className="overflow-hidden" ref={emblaRef}>
+        <ul className="flex gap-5 touch-pan-y">
+          {trendMovies?.results?.map((el) => (
+            <li
+              key={el.id}
+              className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_calc(50%-20px)] md:flex-[0_0_calc(33.33%-20px)] lg:flex-[0_0_calc(25%-20px)] xl:flex-[0_0_calc(20%-20px)]"
+            >
+              <MovieItem movie={el} />
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="md:hidden flex justify-end mt-5">
+        <div className="bg-[#0F0F0F] flex items-center gap-4 p-4 rounded-lg border border-[#262626]">
+          <CarouselControler emblaApi={emblaApi} />
         </div>
       </div>
     </div>

@@ -6,28 +6,14 @@ import Link from "next/link";
 interface Props {
   groupMovies: IMovie[];
   type: string;
-  isLoading: boolean;
   inTop?: boolean;
 }
 
-export default function MovieTypeCard({
-  groupMovies,
-  type,
-  isLoading,
-  inTop,
-}: Props) {
+export default function MovieTypeCard({ groupMovies, type, inTop }: Props) {
   return (
     <ul className="">
       <li className="bg-[#1A1A1A] p-7.5 max-[1300px]:p-4 rounded-lg border border-[#262626]">
         <div className="grid grid-cols-2 gap-2">
-          {isLoading &&
-            Array.from({ length: 4 }).map((_, index) => (
-              <div
-                key={index}
-                className="bg-gray-500 w-29 h-31 rounded-sm"
-              ></div>
-            ))}
-
           {groupMovies &&
             groupMovies?.map((movie: IMovie, index) => (
               <Link key={index} href={`/movie/${movie.id}`}>
@@ -65,7 +51,9 @@ export default function MovieTypeCard({
         )}
 
         <div className="flex items-center justify-between">
-          <h3 className="text-[18px] max-[640px]:text-[14px] font-semibold text-white">{type}</h3>
+          <h3 className="text-[18px] max-[640px]:text-[14px] font-semibold text-white">
+            {type}
+          </h3>
           <Image className="w-5 h-5" src={icons.arrow} alt="arrow icon" />
         </div>
       </li>

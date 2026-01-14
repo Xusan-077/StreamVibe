@@ -1,16 +1,13 @@
 "use client";
 
-import { icons } from "@/constants/icons";
 import { API } from "@/services/API";
 import { useQueries } from "@tanstack/react-query";
-import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import MovieTypeCard from "./MovieTypeCard";
 import Subtitle from "./Subtitle";
 import Text from "./Text";
-import { AnimatePresence, motion } from "framer-motion";
-import { useWindowSize } from "@/hooks/useWindowSize";
 import CarouselControler from "./CarouselControler";
+import useEmblaCarousel from "embla-carousel-react";
 
 interface IMovie_genres {
   id: number;
@@ -33,9 +30,16 @@ export default function MovieGenres({
   title,
   top,
 }: Props) {
-  const { width } = useWindowSize();
-  const [page, setPage] = useState<number>(1);
-  const totalPage = width > 768 ? 5 : 2;
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "start",
+    loop: true,
+    slidesToScroll: 5,
+    skipSnaps: false,
+    breakpoints: {
+      "(max-width: 1024px)": { slidesToScroll: 2 },
+      "(max-width: 640px)": { slidesToScroll: 1 },
+    },
+  });
 
   const MOVIE_GENRES: IMovie_genres[] = [
     { id: 28, name: "Action", slug: "action" },
@@ -80,14 +84,6 @@ export default function MovieGenres({
     };
   });
 
-  const isAllLoading = results.some((result) => result.isLoading);
-
-  const start = (page - 1) * totalPage;
-  const end = start + totalPage;
-
-  const pagination = movieActions.slice(start, end);
-  const maxPages = Math.ceil(movieActions.length / totalPage);
-
   return (
     <div className={`${inMovie ? "" : "mb-37.5 max-[640px]:mb-25"}`}>
       <div className=" mb-20 items-center max-[640px]:mb-10 gap-20 flex justify-between">
@@ -101,48 +97,35 @@ export default function MovieGenres({
         )}
 
         <div className="max-[768px]:hidden bg-[#0F0F0F] flex items-center gap-4 p-4 rounded-lg">
-          <CarouselControler
-            maxPages={maxPages}
-            page={page}
-            setPage={setPage}
-          />
+          <CarouselControler emblaApi={emblaApi} />
         </div>
       </div>
 
       <div className="">
-        <div className="overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.ul
-              key={page}
-              initial={{ x: 50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -50, opacity: 0 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="grid grid-cols-5 gap-7.5 max-[1200px]:grid-cols-4 max-[960px]:grid-cols-3 max-[768px]:grid-cols-2"
-            >
-              {pagination.map((group, index) => (
-                <li key={group.type || index}>
-                  {group.isLoading ? (
-                    <div className="h-64 bg-[#1A1A1A] animate-pulse rounded-2xl border border-[#262626]" />
-                  ) : (
-                    <MovieTypeCard
-                      inTop={!!top}
-                      isLoading={isAllLoading}
-                      groupMovies={group.movies}
-                      type={group.type}
-                    />
-                  )}
-                </li>
-              ))}
-            </motion.ul>
-          </AnimatePresence>
+        <div className="overflow-hidden" ref={emblaRef}>
+          <ul className="flex gap-5">
+            {movieActions.map((group, index) => (
+              <li
+                key={group.type || index}
+                className="min-w-0 flex-[0_0_18%] max-[1200px]:flex-[0_0_25%] max-[900px]:flex-[0_0_50%] "
+              >
+                {group.isLoading ? (
+                  <div className="h-64 bg-[#1A1A1A] animate-pulse rounded-2xl border border-[#262626]" />
+                ) : (
+                  <MovieTypeCard
+                    inTop={!!top}
+                    groupMovies={group.movies}
+                    type={group.type}
+                  />
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="hidden  max-[768px]:flex bg-[#0F0F0F] items-center max-[768px]:justify-between mt-5 gap-4 p-4 rounded-lg">
-          <CarouselControler
-            maxPages={maxPages}
-            page={page}
-            setPage={setPage}
-          />
+        <div className="flex justify-end">
+          <div className="hidden max-[768px]:flex bg-[#0F0F0F] items-center max-[768px]:justify-end mt-5 gap-4 p-4 rounded-lg">
+            <CarouselControler emblaApi={emblaApi} />
+          </div>
         </div>
       </div>
     </div>

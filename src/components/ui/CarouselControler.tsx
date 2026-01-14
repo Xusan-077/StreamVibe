@@ -1,19 +1,32 @@
 import { icons } from "@/constants/icons";
 import Image from "next/image";
+import { useState, useEffect, useCallback } from "react";
+import { UseEmblaCarouselType } from "embla-carousel-react"; // Tip uchun
 
 interface Props {
-  page: number;
-  maxPages: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  emblaApi: UseEmblaCarouselType[1];
 }
 
-export default function CarouselControler({ page, setPage, maxPages }: Props) {
-  if (maxPages <= 1) return null;
+export default function CarouselControler({ emblaApi }: Props) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
+  const onSelect = useCallback((api: any) => {
+    setSelectedIndex(api.selectedScrollSnap());
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    setScrollSnaps(emblaApi.scrollSnapList());
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+  }, [emblaApi, onSelect]);
 
   return (
     <>
       <button
-        onClick={() => setPage((p) => (p === 1 ? maxPages : p - 1))}
+        onClick={() => emblaApi?.scrollPrev()}
         className="max-[640px]:w-10 max-[640px]:h-10 cursor-pointer bg-[#1A1A1A] hover:bg-[#262626] active:scale-95 w-14 h-14 rounded-lg flex items-center justify-center transition-all duration-200"
       >
         <Image
@@ -25,34 +38,24 @@ export default function CarouselControler({ page, setPage, maxPages }: Props) {
         />
       </button>
 
-      <div className="flex items-center max-[640px]:gap-0 gap-1">
-        {Array.from({ length: maxPages }).map((_, index) => {
-          const isActive = page === index + 1;
-          return (
-            <div
-              key={index}
-              className={`h-1 transition-all duration-300
-          ${
-            isActive
-              ? "max-[350px]:w-5 w-6 bg-[#E50000]"
-              : "max-[350px]:w-3 w-4 bg-[#333333]"
-          } 
-          rounded-full 
-          ${
-            index === 0
-              ? "max-[640px]:rounded-l-full max-[640px]:rounded-r-none"
-              : index === maxPages - 1
-              ? "max-[640px]:rounded-r-full max-[640px]:rounded-l-none"
-              : "max-[640px]:rounded-none"
-          }
-        `}
-            />
-          );
-        })}
+      <div className="flex items-center max-[640px]:gap-0 gap-1 max-[768px]:hidden">
+        {scrollSnaps.map((_, index) => (
+          <div
+            key={index}
+            onClick={() => emblaApi?.scrollTo(index)}
+            className={`h-1 cursor-pointer transition-all duration-300
+              ${
+                selectedIndex === index
+                  ? "w-6 bg-[#E50000]"
+                  : "w-4 bg-[#333333]"
+              } 
+              rounded-full ...`}
+          />
+        ))}
       </div>
 
       <button
-        onClick={() => setPage((p) => (p === maxPages ? 1 : p + 1))}
+        onClick={() => emblaApi?.scrollNext()}
         className="max-[640px]:w-10 max-[640px]:h-10 cursor-pointer bg-[#1A1A1A] hover:bg-[#262626] active:scale-95 w-14 h-14 rounded-lg flex items-center justify-center transition-all duration-200"
       >
         <Image

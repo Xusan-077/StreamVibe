@@ -25,7 +25,7 @@ export default function MoviesMovies() {
           </div>
           <div className="mb-25 max-[640px]:mb-12.5">
             <MoviesTrending
-              key="Trending Now"
+              queryKey="Trending Now"
               title="Trending Now"
               url="/trending/movie/day?language=en-US"
             />

@@ -14,6 +14,9 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "StreamVibe | Eng yaxshi filmlar platformasi",
   description: "TMDB orqali eng so'nggi va ommabop filmlarni tomosha qiling",
+  icons: {
+    icon: "/images/Logo.svg",
+  },
 };
 
 export default function RootLayout({
